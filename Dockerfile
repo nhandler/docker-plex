@@ -13,10 +13,11 @@ RUN echo "force-unsafe-io" > /etc/dpkg/dpkg.cfg.d/02apt-speedup &&\
       openssl \
       sudo \
     && \
-    echo "deb http://shell.ninthgate.se/packages/debian wheezy main" > /etc/apt/sources.list.d/plexmediaserver.list && \
-    curl http://shell.ninthgate.se/packages/shell-ninthgate-se-keyring.key | apt-key add - && \
-    apt-get -q update && \
-    apt-get install -qy --force-yes plexmediaserver && \
+    curl --silent https://plex.tv/downloads#pms-desktop | \
+    grep --extended-regexp --only-matching 'https://downloads.plex.tv/plex-media-server/.+/plexmediaserver_.+_amd64.deb' | \
+    xargs curl --silent -O && \
+    dpkg -i plexmediaserver_*_amd64.deb && \
+    rm plexmediaserver_*_amd64.deb && \
     apt-get -y autoremove && \
     apt-get -y clean && \
     rm -rf /var/lib/apt/lists/* && \
